@@ -127,7 +127,7 @@ DWORD WINAPI ClientThread(LPVOID lpParam) {
                 if (strcmp(id,"ALL")==0) {
                     //Gui tin nhan den toan bo nguoi dung
                     
-                    snprintf(sbuf, sizeof(sbuf), "[MESSAGE_ALL] %s: %s\n", clientID, mess);
+                    snprintf(sbuf, sizeof(sbuf), "[MESSAGE_ALL] %s: %s", clientID, mess);
                     SendOtherClients(client, sbuf);
                 }
                 //Gui tin den nguoi cu the
@@ -135,7 +135,7 @@ DWORD WINAPI ClientThread(LPVOID lpParam) {
                     bool flag = true;
                     for (int i = 0; i < numClients; i++) {
                         if (strcmp(id, clients[i].id) == 0) {
-                            snprintf(sbuf, sizeof(sbuf), "[MESSAGE] %s: %s\n", clientID, mess);
+                            snprintf(sbuf, sizeof(sbuf), "[MESSAGE] %s: %s", clientID, mess);
                             send(clients[i].client, sbuf, strlen(sbuf), 0);
                             flag = false;
                         }
