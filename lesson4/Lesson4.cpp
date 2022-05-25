@@ -38,10 +38,10 @@ void RemoveClient(SOCKET client)
 bool checkClient(char* clientID) {
     for (int i = 0; i < numClients; i++) {
         if (strcmp(clientID, clients[i].id) == 0) {
-            return false;
+            return i+1;
         }
     }
-    return true;
+    return 0;
 }
 
 DWORD WINAPI ClientThread(LPVOID lpParam) {
@@ -69,7 +69,7 @@ DWORD WINAPI ClientThread(LPVOID lpParam) {
         }
         else
         {
-            if (strcmp(cmd, "[CONNECT]") == 0 && checkClient(clientID))
+            if (strcmp(cmd, "[CONNECT]") == 0 && !checkClient(clientID))
             {
                 const char* msg = "[CONNECT] OK\n";
                 send(client, msg, strlen(msg), 0);
@@ -92,7 +92,7 @@ DWORD WINAPI ClientThread(LPVOID lpParam) {
     while (1)
     {
         ret = recv(client, buf, sizeof(buf), 0);
-        
+        bool flag= false;//Thuc hien command thanh cong hay khong
         if (ret <= 0)
         {
             RemoveClient(client);
@@ -119,46 +119,37 @@ DWORD WINAPI ClientThread(LPVOID lpParam) {
                     strcat(sbuf, "\n");
                 }
                 send(client, sbuf, strlen(sbuf), 0);
+                flag = true;
                 
             }
-            //Sai cu phap
-            else {
-                const char* msg = "[ERROR] error_message\n";
-                send(client, msg, strlen(msg), 0);
-            }
-
+      
         }
         else if (ret == 3) {
             //chuyen toan bo phan sau cua buf thanh tin nhan gui di
             strcpy(mess, &buf[strlen(cmd) + strlen(id) + 2]);
+           
             //Xu ly viec in tin nhan
             
             if (strcmp(cmd,"[SEND]")==0) {
+                flag = true;
+                //Gui tin nhan den toan bo nguoi dung 
                 if (strcmp(id,"ALL")==0) {
-                    //Gui tin nhan den toan bo nguoi dung
-                    
                     snprintf(sbuf, sizeof(sbuf), "[MESSAGE_ALL] %s: %s", clientID, mess);
                     SendOtherClients(client, sbuf);
                 }
                 //Gui tin den nguoi cu the
-                else {
-                    bool flag = true;
-                    for (int i = 0; i < numClients; i++) {
-                        if (strcmp(id, clients[i].id) == 0) {
-                            snprintf(sbuf, sizeof(sbuf), "[MESSAGE] %s: %s", clientID, mess);
-                            send(clients[i].client, sbuf, strlen(sbuf), 0);
-                            flag = false;
-                        }
-                    }
-                    if (flag){
-                        const char* msg = "[SEND] ERROR error_message\n";
-                        send(client, msg, strlen(msg), 0);
-                    }
+                else if(int j = checkClient(id)) {
+                    snprintf(sbuf, sizeof(sbuf), "[MESSAGE] %s: %s", clientID, mess);
+                    send(clients[j].client, sbuf, strlen(sbuf), 0);
+                }
+                else { 
+                    const char* msg = "[SEND] ERROR error_message\n";
+                    send(client, msg, strlen(msg), 0);
                 }
             }
         }
         //Lenh sai cu phap
-        else {
+        if(!flag) {
             const char* msg = "[ERROR] error_message\n";
             send(client, msg, strlen(msg), 0);
         }
