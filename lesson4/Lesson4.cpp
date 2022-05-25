@@ -13,7 +13,6 @@ typedef struct {
     char* id;
 }user;
 user clients[64];
-
 int numClients = 0;
 //Gui tin cho tat ca user tru nguoi su dung
 void SendOtherClients(SOCKET client,char* msg) {
@@ -33,6 +32,16 @@ void RemoveClient(SOCKET client)
     if (i < numClients - 1)
         clients[i] = clients[numClients - 1];
     numClients--;
+}
+
+//
+bool checkClient(char* clientID) {
+    for (int i = 0; i < numClients; i++) {
+        if (strcmp(clientID, clients[i].id) == 0) {
+            return false;
+        }
+    }
+    return true;
 }
 
 DWORD WINAPI ClientThread(LPVOID lpParam) {
@@ -60,12 +69,7 @@ DWORD WINAPI ClientThread(LPVOID lpParam) {
         }
         else
         {
-            if (strcmp(cmd, "[CONNECT]") != 0)
-            {
-                const char* msg = "[CONNECT] ERROR error_message\n";
-                send(client, msg, strlen(msg), 0);
-            }
-            else
+            if (strcmp(cmd, "[CONNECT]") == 0 && checkClient(clientID))
             {
                 const char* msg = "[CONNECT] OK\n";
                 send(client, msg, strlen(msg), 0);
@@ -76,6 +80,11 @@ DWORD WINAPI ClientThread(LPVOID lpParam) {
                 snprintf(sbuf, sizeof(sbuf), "[USER_CONNECT] %s\n", clientID);
                 SendOtherClients(client, sbuf);
                 break;
+            }
+            else
+            {
+                const char* msg = "[CONNECT] ERROR error_message\n";
+                send(client, msg, strlen(msg), 0);
             }
         }
     }
@@ -104,6 +113,7 @@ DWORD WINAPI ClientThread(LPVOID lpParam) {
             //Danh sach
             else if (strcmp(cmd, "[LIST]") == 0) {
                 sbuf[0] = 0;
+                strcat(sbuf, "[LIST] OK\n");
                 for (int i = 0; i < numClients; i++) {
                     strcat(sbuf, clients[i].id);
                     strcat(sbuf, "\n");
