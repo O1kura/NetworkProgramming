@@ -1,12 +1,15 @@
-//{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ generated include file.
-// Used by WindowsProject1.rc
 
 #define IDS_APP_TITLE			103
-
+#define IDC_WORKSTATIONCLASS    204
 #define IDR_MAINFRAME			128
 #define IDD_WINDOWSPROJECT1_DIALOG	102
 #define IDD_ABOUTBOX			103
+#define IDC_INPUT				201
+#define BUTTON_LOGIN			202
+#define IDC_LIST_CLIENT       210
+#define IDC_LIST_MESSAGE      211
+#define IDC_EDIT_MESSAGE      212
+#define IDC_BUTTON_SEND			213
 #define IDM_ABOUT				104
 #define IDM_EXIT				105
 #define IDI_WINDOWSPROJECT1			107
