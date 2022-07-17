@@ -64,7 +64,7 @@ int main()
                     memcpy(param1, p3 + 7, param1length);
                     param1[param1length] = 0;
                     //Get parameter 2
-                    char* p5 = strstr(p4, " ");
+                    p5 = strstr(p4, " ");
                     int param2length = p5 - p4 - 7;
                     param2 = (char*)malloc(param2length + 1);
                     memcpy(param2, p4 + 7, param2length);
@@ -79,7 +79,7 @@ int main()
                     memcpy(param2, p4 + 7, param2length);
                     param2[param2length] = 0;
                     //Get parameter 1
-                    char* p5 = strstr(p3, " ");
+                    p5 = strstr(p3, " ");
                     int param1length = p5 - p3 - 7;
                     param1 = (char*)malloc(param1length + 1);
                     memcpy(param1, p3 + 7, param1length);
@@ -91,22 +91,22 @@ int main()
                 int b = atoi(param2);
                 if(strcmp(op,"add")==0){
                    
-                    sprintf(buf, "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<html><body><h1>Du tham so</h1><h2>%d+%d=%d</body></html>", a, b, (a+b));
+                    sprintf(buf, "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<html><body><h1>Du tham so</h1><h2>%d+%d=%d</h2></body></html>", a, b, (a+b));
                     send(client, buf, strlen(buf), 0);
                 }
                 else if (strcmp(op, "sub") == 0) {
                     
-                    sprintf(buf, "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<html><body><h1>Du tham so</h1><h2>%d-%d=%d</body></html>", a, b, (a-b));
+                    sprintf(buf, "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<html><body><h1>Du tham so</h1><h2>%d-%d=%d</h2></body></html>", a, b, (a-b));
                     send(client, buf, strlen(buf), 0);
                 }
                 else if (strcmp(op, "mul") == 0) {
                    
-                    sprintf(buf, "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<html><body><h1>Du tham so</h1><h2>%d*%d=%d</body></html>", a, b, (a*b));
+                    sprintf(buf, "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<html><body><h1>Du tham so</h1><h2>%d*%d=%d</h2></body></html>", a, b, (a*b));
                     send(client, buf, strlen(buf), 0);
                 }
                 else if (strcmp(op, "div") == 0) {
                     
-                    sprintf(buf, "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<html><body><h1>Du tham so</h1><h2>%d/%d=%f</body></html>", a, b, ((float)a/b));
+                    sprintf(buf, "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<html><body><h1>Du tham so</h1><h2>%d/%d=%f</h2></body></html>", a, b, ((float)a/b));
                     send(client, buf, strlen(buf), 0);
                 }
                 else {
